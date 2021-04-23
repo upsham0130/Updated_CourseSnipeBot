@@ -40,7 +40,7 @@ def main():
 
     # INFORMATION
     print("\nAttempting to snipe sections. This may take a while\n")
-    print('\033[1m' + '\033[4m' + "\nImportant Information" + '\033[0m')
+    print("\nImportant Information")
     print("•Please leave this program running in the background, it will stop automatically if a section has been sniped or WebReg is closed at 2 am")
     print("•Once a section is sniped, no other selected sections can be sniped until you restart the program and re-enter the desired sections")
 
@@ -69,7 +69,7 @@ def main():
         time.sleep(10)
 
     # ATTEMPT SECTION SNIPE
-    print('\033[1m' + "\nAttempting to snipe section " + section + '\033[0m')
+    print("\nAttempting to snipe section " + section)
     snipe(section)
 
     # CLOSE DRIVERS
@@ -94,9 +94,9 @@ def snipe(section):
         sniped_complete = True
     
     if sniped_complete:
-        print('\033[1m' + "\nSuccesfully sniped " + section + "!" + '\033[0m')
+        print("\nSuccesfully sniped " + section + "!")
     else:
-        print('\033[1m' + "\nThe following error occured: " + '\033[0m')
+        print("\nThe following error occured: ")
         print(error_message)
 
 main()
