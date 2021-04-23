@@ -55,13 +55,14 @@ def main():
     # SEARCH OPEN SECTIONS ARRAY
     found = False
     section = ""
+    sem = driver.execute_script("return AppData.selectedSemester;")
     time.sleep(5)
     array = driver.execute_script("return AppData.openSections;")
     while True:
         for key in section_dict:
-            if section_dict[key] in array: 
+            found = section_search(section_dict[key], array)
+            if found: 
                 section = section_dict[key]
-                found = True
                 break
         if found: break
         driver.execute_script("CourseDownloadService.downloadCourses();")
@@ -70,19 +71,32 @@ def main():
 
     # ATTEMPT SECTION SNIPE
     print("\nAttempting to snipe section " + section)
-    snipe(section)
+    snipe(section, sem)
 
     # CLOSE DRIVERS
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
     driver.close()
 
+def section_search(section, arr) -> bool:
+    mid = int((len(arr) - 1) / 2)
+    lower = 0
+    higher = len(arr) - 1
 
-def snipe(section):
+    while lower <= higher:
+        if section == arr[mid]:
+            return True
+        elif section > arr[mid]:
+            lower = mid + 1
+        else: higher = mid - 1
+        mid = int((lower + higher) / 2)
+    return False
+
+def snipe(section, sem):
     # OPEN SNIPE WINDOW
     driver.execute_script("window.open()")
     driver.switch_to.window(driver.window_handles[1])
-    driver.get("http://sims.rutgers.edu/webreg/editSchedule.htm?login=cas&semesterSelection=92021&indexList=" + section)
+    driver.get("http://sims.rutgers.edu/webreg/editSchedule.htm?login=cas&semesterSelection=" + sem + "&indexList=" + section)
     driver.find_element_by_id("submit").click()
 
     # CHECK RESULT OF SNIPE ATTEMPT
