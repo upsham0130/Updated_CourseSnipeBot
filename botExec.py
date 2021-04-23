@@ -18,12 +18,12 @@ def main():
 
     # USERNAME INFO
     usr = driver.find_element_by_id("username")
-    usr_name = input("Net ID: ")
+    usr_name = input('\033[4m' + "Net ID: " + '\033[0m')
     usr.send_keys(usr_name)
 
     # PASSWORD INFO
     pwd = driver.find_element_by_id("password")
-    usr_pwd = input("Password: ")
+    usr_pwd = input('\033[4m' + "Password: " + '\033[0m')
     pwd.send_keys(usr_pwd)
     driver.find_element_by_name("submit").click()
 
@@ -40,7 +40,7 @@ def main():
 
     # INFORMATION
     print("\nAttempting to snipe sections. This may take a while\n")
-    print("\nImportant Information")
+    print('\033[4m' + '\033[3m' + "\nImportant Information" + '\033[0m')
     print("•Please leave this program running in the background, it will stop automatically if a section has been sniped or WebReg is closed at 2 am")
     print("•Once a section is sniped, no other selected sections can be sniped until you restart the program and re-enter the desired sections")
 
@@ -54,6 +54,7 @@ def main():
 
     # SEARCH OPEN SECTIONS ARRAY
     found = False
+    refresh_count = 0
     section = ""
     sem = driver.execute_script("return AppData.selectedSemester;")
     time.sleep(5)
@@ -67,6 +68,14 @@ def main():
         if found: break
         driver.execute_script("CourseDownloadService.downloadCourses();")
         array = driver.execute_script("return AppData.openSections;")
+        if refresh_count == 30:
+            driver.refresh()
+            WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID,"iframe2")))
+            driver.find_element_by_id("campus_NB").click()
+            driver.find_element_by_id("level_U").click()
+            driver.find_element_by_id("continueButton").click()
+            refresh_count = 0
+        refresh_count += 1
         time.sleep(10)
 
     # ATTEMPT SECTION SNIPE
@@ -83,6 +92,7 @@ def section_search(section, arr) -> bool:
     lower = 0
     higher = len(arr) - 1
 
+    # BINARY SEARCH
     while lower <= higher:
         if section == arr[mid]:
             return True
@@ -108,9 +118,9 @@ def snipe(section, sem):
         sniped_complete = True
     
     if sniped_complete:
-        print("\nSuccesfully sniped " + section + "!")
+        print('\033[3m' + "\nSuccesfully sniped section " + section + "!" + '\033[0m')
     else:
-        print("\nThe following error occured: ")
+        print('\033[3m' + "\nThe following error occured: " + '\033[0m')
         print(error_message)
 
 main()
