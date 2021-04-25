@@ -59,7 +59,7 @@ def main():
     sem = driver.execute_script("return AppData.selectedSemester;")
     time.sleep(5)
     array = driver.execute_script("return AppData.openSections;")
-    while True:
+    while not(time.localtime(time.time()).tm_hour < 6 and time.localtime(time.time()).tm_hour >= 2):
         for key in section_dict:
             found = section_search(section_dict[key], array)
             if found: 
@@ -70,6 +70,8 @@ def main():
         array = driver.execute_script("return AppData.openSections;")
         if refresh_count == 30:
             driver.refresh()
+            time.sleep(1)
+            driver.refresh()
             WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID,"iframe2")))
             driver.find_element_by_id("campus_NB").click()
             driver.find_element_by_id("level_U").click()
@@ -77,6 +79,11 @@ def main():
             refresh_count = 0
         refresh_count += 1
         time.sleep(10)
+
+    # CHECK WEBREG STATUS
+    if time.localtime(time.time()).tm_hour < 6 and time.localtime(time.time()).tm_hour >= 2:
+        print("WebReg has closed, try sniping again tomorrow")
+        return
 
     # ATTEMPT SECTION SNIPE
     print("\nAttempting to snipe section " + section)
