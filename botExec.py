@@ -39,6 +39,7 @@ def main():
             driver.find_element_by_id("username").clear()
             driver.find_element_by_id("password").clear()
             continue
+        print("\nLogged in Successfully")
         logged_in = True
 
     # SET SECTIONS
