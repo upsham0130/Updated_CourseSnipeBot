@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from getpass import getpass
 import time
 
 
@@ -16,16 +17,29 @@ def main():
     # LOAD LOGIN PAGE
     driver.get('https://cas.rutgers.edu/login?service=https%3A%2F%2Fsims.rutgers.edu%2Fwebreg%2Fj_spring_cas_security_check')
 
-    # USERNAME INFO
-    usr = driver.find_element_by_id("username")
-    usr_name = input('\033[4m' + "Net ID: " + '\033[0m')
-    usr.send_keys(usr_name)
+    logged_in = False
 
-    # PASSWORD INFO
-    pwd = driver.find_element_by_id("password")
-    usr_pwd = input('\033[4m' + "Password: " + '\033[0m')
-    pwd.send_keys(usr_pwd)
-    driver.find_element_by_name("submit").click()
+    while not logged_in:
+        # USERNAME INFO
+        usr = driver.find_element_by_id("username")
+        usr_name = input('\033[4m' + "Net ID:" + '\033[0m' + " ")
+        usr.send_keys(usr_name)
+
+        # PASSWORD INFO
+        pwd = driver.find_element_by_id("password")
+        usr_pwd = getpass('\033[4m' + "Password:" + '\033[0m' + " ")
+        pwd.send_keys(usr_pwd)
+        driver.find_element_by_name("submit").click()
+
+        # CHECK LOGIN STATE
+        try:
+            driver.find_element_by_class_name("semesterInputClass")
+        except:
+            print("\nInvalid Credentials, please try again\n")
+            driver.find_element_by_id("username").clear()
+            driver.find_element_by_id("password").clear()
+            continue
+        logged_in = True
 
     # SET SECTIONS
     section_dict = {}
