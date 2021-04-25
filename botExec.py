@@ -5,11 +5,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from getpass import getpass
+from termcolor import colored
 import time
+import os
+os.system("")
 
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
+chrome_options.add_argument("--log-level=3")
 
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
 
@@ -22,12 +26,12 @@ def main():
     while not logged_in:
         # USERNAME INFO
         usr = driver.find_element_by_id("username")
-        usr_name = input('\033[4m' + "Net ID:" + '\033[0m' + " ")
+        usr_name = input(colored("Net ID:", 'white', attrs = ['underline']) + " ")
         usr.send_keys(usr_name)
 
         # PASSWORD INFO
         pwd = driver.find_element_by_id("password")
-        usr_pwd = getpass('\033[4m' + "Password:" + '\033[0m' + " ")
+        usr_pwd = getpass(colored("Password:", 'white', attrs = ['underline']) + " ")
         pwd.send_keys(usr_pwd)
         driver.find_element_by_name("submit").click()
 
@@ -55,7 +59,7 @@ def main():
 
     # INFORMATION
     print("\nAttempting to snipe sections. This may take a while\n")
-    print('\033[4m' + '\033[3m' + "\nImportant Information" + '\033[0m')
+    print(colored("Important Information", 'yellow', attrs = ['bold', 'underline']))
     print("•Please leave this program running in the background, it will stop automatically if a section has been sniped or WebReg is closed at 2 am")
     print("•Once a section is sniped, no other selected sections can be sniped until you restart the program and re-enter the desired sections")
 
@@ -140,9 +144,9 @@ def snipe(section, sem):
         sniped_complete = True
     
     if sniped_complete:
-        print('\033[3m' + "\nSuccesfully sniped section " + section + "!" + '\033[0m')
+        print(colored("\nSuccesfully sniped section " + section + "!", 'white', attrs = ['blink']))
     else:
-        print('\033[3m' + "\nThe following error occured: " + '\033[0m')
+        print(colored("\nThe following error occured: ", 'white', attrs = ['blink']))
         print(error_message)
 
 main()
